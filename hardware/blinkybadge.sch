@@ -1,1 +1,414 @@
 EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:blinkybadge
+LIBS:blinkybadge-cache
+EELAYER 25 0
+EELAYER END
+$Descr USLetter 11000 8500
+encoding utf-8
+Sheet 1 2
+Title "Crypto and Privacy Village 2016 Badge"
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L USB_OTG P?
+U 1 1 5779CBE9
+P 1200 2200
+F 0 "P?" H 1525 2075 50  0000 C CNN
+F 1 "USB_OTG" H 1200 2400 50  0000 C CNN
+F 2 "" V 1150 2100 50  0000 C CNN
+F 3 "" V 1150 2100 50  0000 C CNN
+	1    1200 2200
+	0    -1   1    0   
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5779CE2F
+P 1100 2600
+F 0 "#PWR?" H 1100 2350 50  0001 C CNN
+F 1 "GND" H 1100 2450 50  0000 C CNN
+F 2 "" H 1100 2600 50  0000 C CNN
+F 3 "" H 1100 2600 50  0000 C CNN
+	1    1100 2600
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 5779CE4C
+P 1600 2600
+F 0 "#PWR?" H 1600 2350 50  0001 C CNN
+F 1 "GND" H 1600 2450 50  0000 C CNN
+F 2 "" H 1600 2600 50  0000 C CNN
+F 3 "" H 1600 2600 50  0000 C CNN
+	1    1600 2600
+	1    0    0    -1  
+$EndComp
+$Sheet
+S 2300 1900 700  350 
+U 5779CE96
+F0 "Power" 60
+F1 "Power.sch" 60
+F2 "VUSB" I L 2300 2000 60 
+F3 "STAT" O R 3000 2150 60 
+F4 "VBAT" O R 3000 2000 60 
+$EndSheet
+$Comp
+L SPST SW?
+U 1 1 5779DC18
+P 3850 2000
+F 0 "SW?" H 3850 2100 50  0000 C CNN
+F 1 "SPST" H 3850 1900 50  0000 C CNN
+F 2 "" H 3850 2000 50  0000 C CNN
+F 3 "" H 3850 2000 50  0000 C CNN
+	1    3850 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L ATMEGA8U2 IC?
+U 1 1 5779DC6F
+P 5700 4350
+F 0 "IC?" H 4850 5700 50  0000 C CNN
+F 1 "ATMEGA8U2" H 6450 3000 50  0000 C CNN
+F 2 "TQFP-32" H 5550 4400 50  0000 C CNN
+F 3 "http://www.atmel.com/Images/doc7799.pdf" H 5800 2900 50  0001 C CNN
+	1    5700 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 577B4E0D
+P 5700 5900
+F 0 "#PWR?" H 5700 5650 50  0001 C CNN
+F 1 "GND" H 5700 5750 50  0000 C CNN
+F 2 "" H 5700 5900 50  0000 C CNN
+F 3 "" H 5700 5900 50  0000 C CNN
+	1    5700 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L ATECC508A U?
+U 1 1 577C82D9
+P 7450 3700
+F 0 "U?" H 7450 3950 60  0000 C CNN
+F 1 "ATECC508A" H 7450 3450 60  0000 C CNN
+F 2 "" H 7650 3700 60  0000 C CNN
+F 3 "" H 7650 3700 60  0000 C CNN
+	1    7450 3700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Q_PMOS_GDS Q?
+U 1 1 577C833B
+P 4850 1900
+F 0 "Q?" H 5150 1950 50  0000 R CNN
+F 1 "Q_PMOS_GDS" H 5500 1850 50  0000 R CNN
+F 2 "" H 5050 2000 50  0000 C CNN
+F 3 "" H 4850 1900 50  0000 C CNN
+	1    4850 1900
+	0    -1   1    0   
+$EndComp
+$Comp
+L R R?
+U 1 1 577C870C
+P 4500 2250
+F 0 "R?" V 4580 2250 50  0000 C CNN
+F 1 "100k" V 4500 2250 50  0000 C CNN
+F 2 "" V 4430 2250 50  0000 C CNN
+F 3 "" H 4500 2250 50  0000 C CNN
+	1    4500 2250
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 577C87D2
+P 4500 2500
+F 0 "#PWR?" H 4500 2250 50  0001 C CNN
+F 1 "GND" H 4500 2350 50  0000 C CNN
+F 2 "" H 4500 2500 50  0000 C CNN
+F 3 "" H 4500 2500 50  0000 C CNN
+	1    4500 2500
+	1    0    0    -1  
+$EndComp
+$Comp
+L D_Schottky D?
+U 1 1 577C88F2
+P 5250 1800
+F 0 "D?" H 5250 1900 50  0000 C CNN
+F 1 "D_Schottky" H 5250 1700 50  0000 C CNN
+F 2 "" H 5250 1800 50  0000 C CNN
+F 3 "" H 5250 1800 50  0000 C CNN
+	1    5250 1800
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 1500 2300
+Text Label 3300 2150 2    60   ~ 0
+STAT
+Text Label 1950 2100 2    60   ~ 0
+USB_DN
+Text Label 1950 2200 2    60   ~ 0
+USB_DP
+$Comp
+L R R?
+U 1 1 577C8F67
+P 4150 4750
+F 0 "R?" V 4230 4750 50  0000 C CNN
+F 1 "22" V 4150 4750 50  0000 C CNN
+F 2 "" V 4080 4750 50  0000 C CNN
+F 3 "" H 4150 4750 50  0000 C CNN
+	1    4150 4750
+	0    1    1    0   
+$EndComp
+$Comp
+L R R?
+U 1 1 577C90FD
+P 4150 4850
+F 0 "R?" V 4230 4850 50  0000 C CNN
+F 1 "22" V 4150 4850 50  0000 C CNN
+F 2 "" V 4080 4850 50  0000 C CNN
+F 3 "" H 4150 4850 50  0000 C CNN
+	1    4150 4850
+	0    1    1    0   
+$EndComp
+Text Label 3500 4750 0    60   ~ 0
+USB_DP
+Text Label 3500 4850 0    60   ~ 0
+USB_DN
+$Comp
+L VCC #PWR?
+U 1 1 577C9288
+P 5700 1700
+F 0 "#PWR?" H 5700 1550 50  0001 C CNN
+F 1 "VCC" H 5700 1850 50  0000 C CNN
+F 2 "" H 5700 1700 50  0000 C CNN
+F 3 "" H 5700 1700 50  0000 C CNN
+	1    5700 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C?
+U 1 1 577C95AA
+P 4400 5150
+F 0 "C?" H 4425 5250 50  0000 L CNN
+F 1 "1uF" H 4425 5050 50  0000 L CNN
+F 2 "" H 4438 5000 50  0000 C CNN
+F 3 "" H 4400 5150 50  0000 C CNN
+	1    4400 5150
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 577C9628
+P 4400 5400
+F 0 "#PWR?" H 4400 5150 50  0001 C CNN
+F 1 "GND" H 4400 5250 50  0000 C CNN
+F 2 "" H 4400 5400 50  0000 C CNN
+F 3 "" H 4400 5400 50  0000 C CNN
+	1    4400 5400
+	1    0    0    -1  
+$EndComp
+Text Label 3300 2000 2    60   ~ 0
+VBAT
+$Comp
+L Crystal Y?
+U 1 1 577C9913
+P 4200 3900
+F 0 "Y?" H 4200 4050 50  0000 C CNN
+F 1 "Crystal" H 4200 3750 50  0000 C CNN
+F 2 "" H 4200 3900 50  0000 C CNN
+F 3 "" H 4200 3900 50  0000 C CNN
+	1    4200 3900
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 577C9B06
+P 3850 3750
+F 0 "C?" H 3875 3850 50  0000 L CNN
+F 1 "C" H 3875 3650 50  0000 L CNN
+F 2 "" H 3888 3600 50  0000 C CNN
+F 3 "" H 3850 3750 50  0000 C CNN
+	1    3850 3750
+	0    1    1    0   
+$EndComp
+$Comp
+L C C?
+U 1 1 577C9B51
+P 3850 4050
+F 0 "C?" H 3875 4150 50  0000 L CNN
+F 1 "C" H 3875 3950 50  0000 L CNN
+F 2 "" H 3888 3900 50  0000 C CNN
+F 3 "" H 3850 4050 50  0000 C CNN
+	1    3850 4050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1500 2400 1600 2400
+Wire Wire Line
+	1600 2400 1600 2600
+Wire Wire Line
+	1500 2000 2300 2000
+Wire Wire Line
+	3350 2000 3000 2000
+Wire Wire Line
+	5700 5750 5700 5900
+Wire Wire Line
+	4650 2000 4350 2000
+Wire Wire Line
+	4850 1600 4850 1700
+Wire Wire Line
+	1950 1600 5250 1600
+Wire Wire Line
+	1950 1600 1950 2000
+Connection ~ 1950 2000
+Wire Wire Line
+	4500 1600 4500 2100
+Connection ~ 4500 1600
+Wire Wire Line
+	4500 2400 4500 2500
+Connection ~ 4850 1600
+Wire Wire Line
+	5050 2000 5700 2000
+Wire Wire Line
+	5700 1700 5700 2950
+Connection ~ 5250 2000
+Wire Wire Line
+	5250 1600 5250 1650
+Wire Wire Line
+	5250 1950 5250 2000
+Wire Wire Line
+	3000 2150 3300 2150
+Wire Wire Line
+	1500 2100 1950 2100
+Wire Wire Line
+	1500 2200 1950 2200
+Wire Wire Line
+	4300 4750 4600 4750
+Wire Wire Line
+	4300 4850 4600 4850
+Wire Wire Line
+	4000 4750 3500 4750
+Wire Wire Line
+	4000 4850 3500 4850
+Connection ~ 5700 2000
+Wire Wire Line
+	4600 4550 4400 4550
+Wire Wire Line
+	4400 4550 4400 5000
+Wire Wire Line
+	4400 5300 4400 5400
+Wire Wire Line
+	4600 4950 4600 5350
+Wire Wire Line
+	4600 5350 4400 5350
+Connection ~ 4400 5350
+Wire Wire Line
+	4000 4050 4400 4050
+Wire Wire Line
+	4400 3850 4600 3850
+Wire Wire Line
+	4400 3750 4400 3850
+Wire Wire Line
+	4000 3750 4400 3750
+Wire Wire Line
+	4600 3950 4400 3950
+Wire Wire Line
+	4400 3950 4400 4050
+Connection ~ 4200 3750
+Connection ~ 4200 4050
+Wire Wire Line
+	3700 4050 3550 4050
+Wire Wire Line
+	3700 3750 3550 3750
+Wire Wire Line
+	3550 3750 3550 4200
+$Comp
+L GND #PWR?
+U 1 1 577C9CF2
+P 3550 4200
+F 0 "#PWR?" H 3550 3950 50  0001 C CNN
+F 1 "GND" H 3550 4050 50  0000 C CNN
+F 2 "" H 3550 4200 50  0000 C CNN
+F 3 "" H 3550 4200 50  0000 C CNN
+	1    3550 4200
+	1    0    0    -1  
+$EndComp
+Connection ~ 3550 4050
+Wire Wire Line
+	7000 3650 6800 3650
+Wire Wire Line
+	7000 3750 6800 3750
+$Comp
+L GND #PWR?
+U 1 1 577CA05C
+P 8000 3850
+F 0 "#PWR?" H 8000 3600 50  0001 C CNN
+F 1 "GND" H 8000 3700 50  0000 C CNN
+F 2 "" H 8000 3850 50  0000 C CNN
+F 3 "" H 8000 3850 50  0000 C CNN
+	1    8000 3850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7900 3750 8000 3750
+Wire Wire Line
+	8000 3750 8000 3850
+$Comp
+L VCC #PWR?
+U 1 1 577CA0E3
+P 8000 3550
+F 0 "#PWR?" H 8000 3400 50  0001 C CNN
+F 1 "VCC" H 8000 3700 50  0000 C CNN
+F 2 "" H 8000 3550 50  0000 C CNN
+F 3 "" H 8000 3550 50  0000 C CNN
+	1    8000 3550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7900 3650 8000 3650
+Wire Wire Line
+	8000 3650 8000 3550
+Wire Wire Line
+	5700 2850 4500 2850
+Wire Wire Line
+	4500 2850 4500 4650
+Wire Wire Line
+	4500 3750 4600 3750
+Connection ~ 5700 2850
+Wire Wire Line
+	4500 4650 4600 4650
+Connection ~ 4500 3750
+$EndSCHEMATC
