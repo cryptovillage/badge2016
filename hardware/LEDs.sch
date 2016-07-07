@@ -1,0 +1,331 @@
+EESchema Schematic File Version 2
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+LIBS:blinkybadge
+LIBS:blinkybadge-cache
+EELAYER 25 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 3
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text HLabel 1000 1400 0    60   Input ~ 0
+DIN
+$Comp
+L WS2812B D?
+U 1 1 577DCBE1
+P 1750 1550
+F 0 "D?" H 1410 1830 50  0000 L CNN
+F 1 "WS2812B" H 1600 1550 50  0000 L CNN
+F 2 "WS2812B" H 1600 1550 50  0001 L CNN
+F 3 "" H 1500 1500 60  0000 C CNN
+	1    1750 1550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1000 1400 1300 1400
+$Comp
+L C C?
+U 1 1 577DCCC3
+P 1750 1150
+F 0 "C?" H 1775 1250 50  0000 L CNN
+F 1 "1uF" H 1775 1050 50  0000 L CNN
+F 2 "" H 1788 1000 50  0000 C CNN
+F 3 "" H 1750 1150 50  0000 C CNN
+	1    1750 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1300 1700 1200 1700
+Wire Wire Line
+	1200 1150 1200 1950
+Wire Wire Line
+	1200 1150 1600 1150
+Wire Wire Line
+	2300 1400 2200 1400
+Wire Wire Line
+	2300 950  2300 1400
+Wire Wire Line
+	2300 1150 1900 1150
+$Comp
+L WS2812B D?
+U 1 1 577DCD4A
+P 3200 1550
+F 0 "D?" H 2860 1830 50  0000 L CNN
+F 1 "WS2812B" H 3050 1550 50  0000 L CNN
+F 2 "WS2812B" H 3050 1550 50  0001 L CNN
+F 3 "" H 2950 1500 60  0000 C CNN
+	1    3200 1550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	2450 1400 2750 1400
+$Comp
+L C C?
+U 1 1 577DCD51
+P 3200 1150
+F 0 "C?" H 3225 1250 50  0000 L CNN
+F 1 "1uF" H 3225 1050 50  0000 L CNN
+F 2 "" H 3238 1000 50  0000 C CNN
+F 3 "" H 3200 1150 50  0000 C CNN
+	1    3200 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	2750 1700 2650 1700
+Wire Wire Line
+	2650 1150 2650 1950
+Wire Wire Line
+	2650 1150 3050 1150
+Wire Wire Line
+	3750 1400 3650 1400
+Wire Wire Line
+	3750 950  3750 1400
+Wire Wire Line
+	3750 1150 3350 1150
+Wire Wire Line
+	2200 1700 2450 1700
+Wire Wire Line
+	2450 1700 2450 1400
+$Comp
+L WS2812B D?
+U 1 1 577DCDD7
+P 4650 1550
+F 0 "D?" H 4310 1830 50  0000 L CNN
+F 1 "WS2812B" H 4500 1550 50  0000 L CNN
+F 2 "WS2812B" H 4500 1550 50  0001 L CNN
+F 3 "" H 4400 1500 60  0000 C CNN
+	1    4650 1550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	3900 1400 4200 1400
+$Comp
+L C C?
+U 1 1 577DCDDE
+P 4650 1150
+F 0 "C?" H 4675 1250 50  0000 L CNN
+F 1 "1uF" H 4675 1050 50  0000 L CNN
+F 2 "" H 4688 1000 50  0000 C CNN
+F 3 "" H 4650 1150 50  0000 C CNN
+	1    4650 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	4200 1700 4100 1700
+Wire Wire Line
+	4100 1150 4100 1950
+Wire Wire Line
+	4100 1150 4500 1150
+Wire Wire Line
+	5200 1400 5100 1400
+Wire Wire Line
+	5200 800  5200 1400
+Wire Wire Line
+	5200 1150 4800 1150
+$Comp
+L WS2812B D?
+U 1 1 577DCE44
+P 6100 1550
+F 0 "D?" H 5760 1830 50  0000 L CNN
+F 1 "WS2812B" H 5950 1550 50  0000 L CNN
+F 2 "WS2812B" H 5950 1550 50  0001 L CNN
+F 3 "" H 5850 1500 60  0000 C CNN
+	1    6100 1550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	5350 1400 5650 1400
+$Comp
+L C C?
+U 1 1 577DCE4B
+P 6100 1150
+F 0 "C?" H 6125 1250 50  0000 L CNN
+F 1 "1uF" H 6125 1050 50  0000 L CNN
+F 2 "" H 6138 1000 50  0000 C CNN
+F 3 "" H 6100 1150 50  0000 C CNN
+	1    6100 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	5650 1700 5550 1700
+Wire Wire Line
+	5550 1150 5550 2150
+Wire Wire Line
+	5550 1150 5950 1150
+Wire Wire Line
+	6650 1400 6550 1400
+Wire Wire Line
+	6650 950  6650 1400
+Wire Wire Line
+	6650 1150 6250 1150
+$Comp
+L WS2812B D?
+U 1 1 577DCEC5
+P 7550 1550
+F 0 "D?" H 7210 1830 50  0000 L CNN
+F 1 "WS2812B" H 7400 1550 50  0000 L CNN
+F 2 "WS2812B" H 7400 1550 50  0001 L CNN
+F 3 "" H 7300 1500 60  0000 C CNN
+	1    7550 1550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	6800 1400 7100 1400
+$Comp
+L C C?
+U 1 1 577DCECC
+P 7550 1150
+F 0 "C?" H 7575 1250 50  0000 L CNN
+F 1 "1uF" H 7575 1050 50  0000 L CNN
+F 2 "" H 7588 1000 50  0000 C CNN
+F 3 "" H 7550 1150 50  0000 C CNN
+	1    7550 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	7100 1700 7000 1700
+Wire Wire Line
+	7000 1150 7000 1950
+Wire Wire Line
+	7000 1150 7400 1150
+Wire Wire Line
+	8100 1400 8000 1400
+Wire Wire Line
+	8100 950  8100 1400
+Wire Wire Line
+	8100 1150 7700 1150
+$Comp
+L WS2812B D?
+U 1 1 577DCF4A
+P 9000 1550
+F 0 "D?" H 8660 1830 50  0000 L CNN
+F 1 "WS2812B" H 8850 1550 50  0000 L CNN
+F 2 "WS2812B" H 8850 1550 50  0001 L CNN
+F 3 "" H 8750 1500 60  0000 C CNN
+	1    9000 1550
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	8250 1400 8550 1400
+$Comp
+L C C?
+U 1 1 577DCF51
+P 9000 1150
+F 0 "C?" H 9025 1250 50  0000 L CNN
+F 1 "1uF" H 9025 1050 50  0000 L CNN
+F 2 "" H 9038 1000 50  0000 C CNN
+F 3 "" H 9000 1150 50  0000 C CNN
+	1    9000 1150
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8550 1700 8450 1700
+Wire Wire Line
+	8450 1150 8450 1950
+Wire Wire Line
+	8450 1150 8850 1150
+Wire Wire Line
+	9550 1400 9450 1400
+Wire Wire Line
+	9550 950  9550 1400
+Wire Wire Line
+	9550 1150 9150 1150
+Wire Wire Line
+	8000 1700 8250 1700
+Wire Wire Line
+	8250 1700 8250 1400
+Wire Wire Line
+	6550 1700 6800 1700
+Wire Wire Line
+	6800 1700 6800 1400
+Wire Wire Line
+	5100 1700 5350 1700
+Wire Wire Line
+	5350 1700 5350 1400
+Wire Wire Line
+	3650 1700 3900 1700
+Wire Wire Line
+	3900 1700 3900 1400
+Wire Wire Line
+	2300 950  9550 950 
+Connection ~ 9550 1150
+Connection ~ 2300 1150
+Connection ~ 3750 950 
+Connection ~ 3750 1150
+Connection ~ 5200 950 
+Connection ~ 5200 1150
+Connection ~ 6650 950 
+Connection ~ 6650 1150
+Connection ~ 8100 950 
+Connection ~ 8100 1150
+Wire Wire Line
+	8450 1950 1200 1950
+Connection ~ 8450 1700
+Connection ~ 1200 1700
+Connection ~ 7000 1950
+Connection ~ 7000 1700
+Connection ~ 5550 1950
+Connection ~ 5550 1700
+Connection ~ 4100 1950
+Connection ~ 4100 1700
+Connection ~ 2650 1950
+Connection ~ 2650 1700
+$Comp
+L GND #PWR?
+U 1 1 577DD399
+P 5550 2150
+F 0 "#PWR?" H 5550 1900 50  0001 C CNN
+F 1 "GND" H 5550 2000 50  0000 C CNN
+F 2 "" H 5550 2150 50  0000 C CNN
+F 3 "" H 5550 2150 50  0000 C CNN
+	1    5550 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L VCC #PWR?
+U 1 1 577DD41D
+P 5200 800
+F 0 "#PWR?" H 5200 650 50  0001 C CNN
+F 1 "VCC" H 5200 950 50  0000 C CNN
+F 2 "" H 5200 800 50  0000 C CNN
+F 3 "" H 5200 800 50  0000 C CNN
+	1    5200 800 
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC
