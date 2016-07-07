@@ -1161,7 +1161,7 @@
   )
 
   (module lib:quartercu (layer F.Cu) (tedit 0) (tstamp 577E1976)
-    (at 79.502 74.676)
+    (at 79.502 74.93)
     (fp_text reference G*** (at 0 0) (layer F.SilkS) hide
       (effects (font (thickness 0.3)))
     )
