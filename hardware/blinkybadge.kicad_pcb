@@ -5,7 +5,7 @@
     (no_connects 0)
     (area 41.324999 36.824999 117.675001 113.175001)
     (thickness 1.6)
-    (drawings 8)
+    (drawings 9)
     (tracks 0)
     (zones 0)
     (modules 2)
@@ -1283,6 +1283,9 @@
       (xy -5.044894 0.564954) (xy -4.920602 0.524262) (xy -4.9022 0.527341)) (layer F.Cu) (width 0.01))
   )
 
+  (gr_text @cryptovillage (at 80.264 107.696) (layer B.SilkS)
+    (effects (font (size 1.5 1.5) (thickness 0.3)) (justify mirror))
+  )
   (gr_line (start 52.6 48.1) (end 79.5 36.9) (angle 90) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 41.4 75.1) (end 52.6 48.1) (angle 90) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 52.6 102) (end 41.4 75.1) (angle 90) (layer Edge.Cuts) (width 0.15))
