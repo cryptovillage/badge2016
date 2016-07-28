@@ -43,16 +43,24 @@
  *  the device will send, and what it may be sent back from the host. Refer to the HID specification for
  *  more details on HID report descriptors.
  */
-const USB_Descriptor_HIDReport_Datatype_t PROGMEM GenericReport[] =
+const USB_Descriptor_HIDReport_Datatype_t PROGMEM FIDO_U2F_Report[] =
 {
-	/* Use the HID class driver's standard Vendor HID report.
-	 *  Vendor Usage Page: 0
-	 *  Vendor Collection Usage: 1
-	 *  Vendor Report IN Usage: 2
-	 *  Vendor Report OUT Usage: 3
-	 *  Vendor Report Size: GENERIC_REPORT_SIZE
-	 */
-	HID_DESCRIPTOR_VENDOR(0x00, 0x01, 0x02, 0x03, GENERIC_REPORT_SIZE)
+	HID_RI_USAGE_PAGE(16, 0xf1d0),
+	HID_RI_USAGE(8, 0x01),
+	HID_RI_COLLECTION(8, 0x01),
+	HID_RI_USAGE(8, 0x20),
+	HID_RI_LOGICAL_MINIMUM(8, 0x00),
+	HID_RI_LOGICAL_MAXIMUM(8, 0xFF),
+	HID_RI_REPORT_SIZE(8, 0x08),
+	HID_RI_REPORT_COUNT(8, 64),
+	HID_RI_INPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+	HID_RI_USAGE(8, 0x21),
+	HID_RI_LOGICAL_MINIMUM(8, 0x00),
+	HID_RI_LOGICAL_MAXIMUM(8, 0xFF),
+	HID_RI_REPORT_SIZE(8, 0x08),
+	HID_RI_REPORT_COUNT(8, 64),
+	HID_RI_OUTPUT(8, HID_IOF_DATA | HID_IOF_VARIABLE | HID_IOF_ABSOLUTE),
+	HID_RI_END_COLLECTION(0)
 };
 
 /** Device descriptor structure. This descriptor, located in FLASH memory, describes the overall
@@ -71,8 +79,8 @@ const USB_Descriptor_Device_t PROGMEM DeviceDescriptor =
 
 	.Endpoint0Size          = FIXED_CONTROL_ENDPOINT_SIZE,
 
-	.VendorID               = 0x03EB,
-	.ProductID              = 0x204F,
+	.VendorID               = 0xDC24,
+	.ProductID              = 0x1337,
 	.ReleaseNumber          = VERSION_BCD(0,0,1),
 
 	.ManufacturerStrIndex   = STRING_ID_Manufacturer,
@@ -92,54 +100,54 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 	.Config =
 		{
 			.Header                 = {.Size = sizeof(USB_Descriptor_Configuration_Header_t), .Type = DTYPE_Configuration},
-
 			.TotalConfigurationSize = sizeof(USB_Descriptor_Configuration_t),
 			.TotalInterfaces        = 1,
-
 			.ConfigurationNumber    = 1,
 			.ConfigurationStrIndex  = NO_DESCRIPTOR,
-
-			.ConfigAttributes       = (USB_CONFIG_ATTR_RESERVED | USB_CONFIG_ATTR_SELFPOWERED),
-
-			.MaxPowerConsumption    = USB_CONFIG_POWER_MA(100)
+			.ConfigAttributes       = USB_CONFIG_ATTR_RESERVED,
+			.MaxPowerConsumption    = USB_CONFIG_POWER_MA(500)
 		},
 
 	.HID_Interface =
 		{
 			.Header                 = {.Size = sizeof(USB_Descriptor_Interface_t), .Type = DTYPE_Interface},
-
-			.InterfaceNumber        = INTERFACE_ID_GenericHID,
+			.InterfaceNumber        = INTERFACE_ID_FIDO_U2F,
 			.AlternateSetting       = 0x00,
-
-			.TotalEndpoints         = 1,
-
+			.TotalEndpoints         = 2,
 			.Class                  = HID_CSCP_HIDClass,
 			.SubClass               = HID_CSCP_NonBootSubclass,
 			.Protocol               = HID_CSCP_NonBootProtocol,
-
 			.InterfaceStrIndex      = NO_DESCRIPTOR
 		},
 
-	.HID_GenericHID =
+	.HID_FidoU2F =
 		{
 			.Header                 = {.Size = sizeof(USB_HID_Descriptor_HID_t), .Type = HID_DTYPE_HID},
-
 			.HIDSpec                = VERSION_BCD(1,1,1),
 			.CountryCode            = 0x00,
 			.TotalReportDescriptors = 1,
 			.HIDReportType          = HID_DTYPE_Report,
-			.HIDReportLength        = sizeof(GenericReport)
+			.HIDReportLength        = sizeof(FIDO_U2F_Report)
 		},
 
 	.HID_ReportINEndpoint =
 		{
 			.Header                 = {.Size = sizeof(USB_Descriptor_Endpoint_t), .Type = DTYPE_Endpoint},
-
-			.EndpointAddress        = GENERIC_IN_EPADDR,
+			.EndpointAddress        = FIDO_IN_EPADDR,
 			.Attributes             = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
-			.EndpointSize           = GENERIC_EPSIZE,
+			.EndpointSize           = FIDO_U2F_EPSIZE,
 			.PollingIntervalMS      = 0x05
 		},
+		/*
+	.HID_ReportOUTEndpoint =
+		{
+			.Header                 = {.Size = sizeof(USB_Descriptor_Endpoint_t), .Type = DTYPE_Endpoint},
+			.EndpointAddress        = FIDO_OUT_EPADDR,
+			.Attributes             = (EP_TYPE_INTERRUPT | ENDPOINT_ATTR_NO_SYNC | ENDPOINT_USAGE_DATA),
+			.EndpointSize           = FIDO_U2F_EPSIZE,
+			.PollingIntervalMS      = 0x05
+		},
+		*/
 };
 
 /** Language descriptor structure. This descriptor, located in FLASH memory, is returned when the host requests
@@ -205,12 +213,12 @@ uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
 
 			break;
 		case HID_DTYPE_HID:
-			Address = &ConfigurationDescriptor.HID_GenericHID;
+			Address = &ConfigurationDescriptor.HID_FidoU2F;
 			Size    = sizeof(USB_HID_Descriptor_HID_t);
 			break;
 		case HID_DTYPE_Report:
-			Address = &GenericReport;
-			Size    = sizeof(GenericReport);
+			Address = &FIDO_U2F_Report;
+			Size    = sizeof(FIDO_U2F_Report);
 			break;
 	}
 

@@ -52,10 +52,11 @@
 		{
 			USB_Descriptor_Configuration_Header_t Config;
 
-			// Generic HID Interface
+			// FIDO HID Interface
 			USB_Descriptor_Interface_t            HID_Interface;
-			USB_HID_Descriptor_HID_t              HID_GenericHID;
+			USB_HID_Descriptor_HID_t              HID_FidoU2F;
 			USB_Descriptor_Endpoint_t             HID_ReportINEndpoint;
+			//USB_Descriptor_Endpoint_t             HID_ReportOUTEndpoint;
 		} USB_Descriptor_Configuration_t;
 
 		/** Enum for the device interface descriptor IDs within the device. Each interface descriptor
@@ -64,7 +65,7 @@
 		 */
 		enum InterfaceDescriptors_t
 		{
-			INTERFACE_ID_GenericHID = 0, /**< GenericHID interface descriptor ID */
+			INTERFACE_ID_FIDO_U2F = 0,
 		};
 
 		/** Enum for the device string descriptor IDs within the device. Each string descriptor should
@@ -80,10 +81,11 @@
 
 	/* Macros: */
 		/** Endpoint address of the Generic HID reporting IN endpoint. */
-		#define GENERIC_IN_EPADDR         (ENDPOINT_DIR_IN | 1)
+		#define FIDO_IN_EPADDR         (ENDPOINT_DIR_IN | 1)
+		//#define FIDO_OUT_EPADDR        (ENDPOINT_DIR_OUT | 1)
 
 		/** Size in bytes of the Generic HID reporting endpoint. */
-		#define GENERIC_EPSIZE            8
+		#define FIDO_U2F_EPSIZE            64
 
 	/* Function Prototypes: */
 		uint16_t CALLBACK_USB_GetDescriptor(const uint16_t wValue,
