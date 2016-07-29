@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="spectrum.css">
+    <link rel="stylesheet" type="text/css" href="custom.css">
+  </head>
+  <body>
+    <div class="color-pickers">
+      <div class="led led1">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led2">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led3">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led4">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led5">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led6">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led7">
+        <input class="led-input"></input>
+      </div>
+      <div class="led led8">
+        <input class="led-input"></input>
+      </div>
+    </div>
+    <div class="controls">
+      <div>
+        <input id="slider" type="range" min="0" max="0" value="0" step="1" />
+        <span id="slider-value"></span> /
+        <span id="slider-total"></span>
+      </div>
+      <span class="bom-input">BPM<input type="text" id="bpm" value="60"></input></span>    
+      <span class="control-button"><a href="#" class="control-back"><i class="fa fa-step-backward"></i></a></a></span>    
+      <span class="control-button control-paused" style="display:none;"><a href="#" class="control-pause"><i class="fa fa-pause"></i></a></span>    
+      <span class="control-button control-playing"><a href="#" class="control-play"><i class="fa fa-play"></i></a></span>    
+      <span class="control-button"><a href="#" class="control-forward"><i class="fa fa-step-forward"></i></a></span>    
+      <span class="control-button"><a href="#" class="control-repeat"><i class="fa fa-repeat"></i></a></span>    
+      <span class="control-button"><a href="#" class="control-plus"><i class="fa fa-plus"></i></a></span>    
+    </div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="spectrum.js"></script>
+    <script type="text/javascript" src="custom.js"></script>
+  </body>
+</html>
