@@ -10,3 +10,55 @@
   margin-left: 5px;
   margin-right: 5px;
 }
+.logo {
+  max-width: 400px;
+}
+.color-pickers {
+  position: relative;
+  display: inline-block;
+}
+
+.led {
+  position: absolute;
+}
+
+.led1 {
+  top: 87%;
+  left: 46%;
+}
+
+.led2 {
+  top: 76%;
+  left: 17%;
+}
+
+.led3 {
+  top: 46%;
+  left: 5%;
+}
+
+.led4 {
+  top: 17%;
+  left: 17%;
+}
+
+.led5 {
+  top: 5%;
+  left: 46%;
+}
+
+.led6 {
+  top: 17%;
+  left: 76%;
+}
+
+.led7 {
+  top: 46%;
+  left: 87%;
+}
+
+.led8 {
+  top: 76%;
+  left: 76%;
+}
+
