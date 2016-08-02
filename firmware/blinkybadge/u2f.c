@@ -55,7 +55,7 @@ void u2f_request(struct u2f_request_apdu * req)
         	 *rcode = u2f_authenticate((struct u2f_authenticate_request*)req->payload, req->p1);
         	break;
         case U2F_VERSION:
-        	*rcode =u2f_version();
+        	*rcode = u2f_version();
         	break;
         case U2F_VENDOR_FIRST:
         	break;
@@ -64,7 +64,8 @@ void u2f_request(struct u2f_request_apdu * req)
         default:
         	break;
     }
-    u2f_response_writeback((uint8_t*)rcode,2);
+	u2f_response_writeback((uint8_t*)rcode + 1, 1);
+    u2f_response_writeback((uint8_t*)rcode, 1);
     u2f_response_flush();
 }
 
@@ -195,7 +196,7 @@ static int16_t u2f_register(struct u2f_register_request * req)
     u2f_response_writeback(i,1);
     u2f_response_writeback(key_handle,U2F_KEY_HANDLE_SIZE);
 
-    u2f_response_writeback(u2f_get_attestation_cert(),u2f_attestation_cert_size());
+    u2f_response_writeback_progmem(u2f_get_attestation_cert(),u2f_attestation_cert_size());
 
     dump_signature_der((uint8_t*)req);
 

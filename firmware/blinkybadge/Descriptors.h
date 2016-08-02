@@ -82,7 +82,7 @@
 	/* Macros: */
 		/** Endpoint address of the Generic HID reporting IN endpoint. */
 		#define FIDO_IN_EPADDR         (ENDPOINT_DIR_IN | 1)
-		//#define FIDO_OUT_EPADDR        (ENDPOINT_DIR_OUT | 1)
+		#define FIDO_OUT_EPADDR        (ENDPOINT_DIR_OUT | 1)
 
 		/** Size in bytes of the Generic HID reporting endpoint. */
 		#define FIDO_U2F_EPSIZE            64

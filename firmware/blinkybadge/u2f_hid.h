@@ -41,7 +41,7 @@
 #define TYPE_INIT               0x80	// Initial frame identifier
 #define TYPE_CONT               0x00	// Continuation frame identifier
 
-#define U2FHID_PING         (TYPE_INIT | 0x01)	// Echo data through local processor only
+#define U2FHID_PING			(TYPE_INIT | 0x01)	// Echo data through local processor only
 #define U2FHID_MSG          (TYPE_INIT | 0x03)	// Send U2F message frame
 #define U2FHID_LOCK         (TYPE_INIT | 0x04)	// Send lock channel command
 #define U2FHID_INIT         (TYPE_INIT | 0x06)	// Channel initialization
@@ -50,6 +50,17 @@
 
 #define U2FHID_VENDOR_FIRST (TYPE_INIT | 0x40)	// First vendor defined command
 #define U2FHID_VENDOR_LAST  (TYPE_INIT | 0x7f)	// Last vendor defined command
+
+#define U2FHID_CUSTOM_GET_CONFIG		(TYPE_INIT | 0x40) // Get ATECC508A config
+#define U2FHID_CUSTOM_INIT_CONFIG		(TYPE_INIT | 0x41) // Initialize ATECC508A config
+#define U2FHID_CUSTOM_LOCK_CONFIG		(TYPE_INIT | 0x42) // Lock ATECC5088A config
+#define U2FHID_CUSTOM_GEN_ATT_KEY		(TYPE_INIT | 0x43) // Generate attestation key pair
+#define U2FHID_CUSTOM_WRITE_ATT_CERT	(TYPE_INIT | 0x44) // Write attestation certificate
+#define U2FHID_CUSTOM_GET_RNG			(TYPE_INIT | 0x45) // Get random number 
+#define U2FHID_CUSTOM_SET_RNG_SEED		(TYPE_INIT | 0x46) // Set random number seed
+#define U2FHID_CUSTOM_WIPE_KEYS			(TYPE_INIT | 0x47) // Wipe key slots
+#define U2FHID_CUSTOM_INC_COUNTER		(TYPE_INIT | 0x48) // Increment the ATECC508A's internal counter
+#define U2FHID_CUSTOM_ENTER_BOOTLOADER	(TYPE_INIT | 0x49) // Enter the bootloader
 
 #define ERR_NONE                0x00    // No error
 #define ERR_INVALID_CMD         0x01    // Invalid command
@@ -68,8 +79,8 @@
 #define U2FHID_CONT_PAYLOAD_SIZE  (FIDO_U2F_EPSIZE-5)
 #define U2FHID_MAX_PAYLOAD_SIZE  (7609)
 
-#define U2FHID_LEN(req) (*(uint16_t*)&req->pkt.init.bcnth)
-#define U2FHID_SET_LEN(req,len) (*(uint16_t*)&req->pkt.init.bcnth = (uint16_t)len)
+#define U2FHID_LEN(req) ((req->pkt.init.bcnth << 8) | req->pkt.init.bcntl)
+#define U2FHID_SET_LEN(req,len) (req->pkt.init.bcnth = len >> 8, req->pkt.init.bcntl = len & 0xff)
 
 #define U2FHID_TIMEOUT_MS 1500
 #define U2FHID_TIMEOUT(hid) (get_ms() - (hid)->last_buffered > U2FHID_TIMEOUT_MS)
@@ -114,7 +125,6 @@ typedef enum
 	U2FHID_INCOMPLETE,
 	U2FHID_FAIL,
 } U2FHID_STATUS;
-
 
 void u2f_hid_init();
 

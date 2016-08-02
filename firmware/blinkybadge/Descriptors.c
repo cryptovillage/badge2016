@@ -113,7 +113,7 @@ const USB_Descriptor_Configuration_t PROGMEM ConfigurationDescriptor =
 			.Header                 = {.Size = sizeof(USB_Descriptor_Interface_t), .Type = DTYPE_Interface},
 			.InterfaceNumber        = INTERFACE_ID_FIDO_U2F,
 			.AlternateSetting       = 0x00,
-			.TotalEndpoints         = 2,
+			.TotalEndpoints         = 1,
 			.Class                  = HID_CSCP_HIDClass,
 			.SubClass               = HID_CSCP_NonBootSubclass,
 			.Protocol               = HID_CSCP_NonBootProtocol,

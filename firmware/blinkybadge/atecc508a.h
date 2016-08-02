@@ -30,7 +30,7 @@
 #ifndef ATECC508A_H_
 #define ATECC508A_H_
 
-#define ATECC508A_ADDR 					0xc0
+#define ATECC508A_ADDR 					0x60
 
 #define ATECC_CMD_COUNTER 				0x24
 	// P1
@@ -150,5 +150,7 @@ int8_t atecc_send_recv(uint8_t cmd, uint8_t p1, uint16_t p2,
 
 int8_t atecc_write_eeprom(uint8_t base, uint8_t offset, uint8_t* srcbuf, uint8_t len);
 
+int is_locked(uint8_t * buf);
+int8_t atecc_setup_config();
 
 #endif /* ATECC508A_H_ */

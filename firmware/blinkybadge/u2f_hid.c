@@ -42,6 +42,8 @@
 #include "blinkybadge.h"
 #include "u2f_hid.h"
 #include "u2f.h"
+#include "atecc508a.h"
+#include "bootloader.h"
 
 #define CID_MAX (sizeof(CIDS)/sizeof(uint32_t))
 
@@ -280,6 +282,7 @@ static void hid_u2f_parse(struct u2f_hid_msg* req)
 	uint16_t len = 0;
 	uint8_t secs;
 	struct u2f_hid_init_response * init_res = appdata.tmp;
+	struct atecc_response res;
 
 	switch(hid_layer.current_cmd)
 	{
@@ -314,7 +317,7 @@ static void hid_u2f_parse(struct u2f_hid_msg* req)
 			break;
 		case U2FHID_MSG:
 
-			if (U2FHID_LEN(req) < 4)
+			if ((req->pkt.init.cmd & 0x80) && (req) < 4)
 			{
 				stamp_error(hid_layer.current_cid, ERR_INVALID_LEN);
 				//u2f_prints("invalid len msg\r\n");
@@ -388,6 +391,112 @@ static void hid_u2f_parse(struct u2f_hid_msg* req)
 				u2f_hid_flush();
 			}
 
+			break;
+		case U2FHID_CUSTOM_GET_CONFIG:
+			if (atecc_send_recv(ATECC_CMD_READ, ATECC_RW_CONFIG | ATECC_RW_EXT,
+				(req->pkt.init.payload[0] << 8) | req->pkt.init.payload[1], NULL, 0, 
+				appdata.tmp, sizeof(appdata.tmp), &res) == 0) 
+			{
+				u2f_hid_set_len(res.len);
+				u2f_hid_writeback(res.buf, res.len);
+				u2f_hid_flush();
+			}
+			else
+			{
+				u2f_hid_set_len(0);
+				u2f_hid_writeback(NULL, 0);
+				u2f_hid_flush();	
+			}
+			break;
+		case U2FHID_CUSTOM_INIT_CONFIG:
+			atecc_setup_config();
+			break;
+		case U2FHID_CUSTOM_LOCK_CONFIG:
+			if (is_locked(appdata.tmp)) {
+				appdata.tmp[0] = 0xff;
+				u2f_hid_set_len(1);
+				u2f_hid_writeback(appdata.tmp, 1);
+				u2f_hid_flush();
+			}
+			else if (atecc_send_recv(ATECC_CMD_LOCK, ATECC_LOCK_CONFIG,
+				(req->pkt.init.payload[0] << 8) | req->pkt.init.payload[1], NULL, 0, 
+				appdata.tmp, sizeof(appdata.tmp), NULL))
+			{
+				appdata.tmp[0] = 0xfe;
+				u2f_hid_set_len(1);
+				u2f_hid_writeback(appdata.tmp, 1);
+				u2f_hid_flush();
+			}
+			else
+			{
+				appdata.tmp[0] = 0;
+				u2f_hid_set_len(1);
+				u2f_hid_writeback(appdata.tmp, 1);
+				u2f_hid_flush();
+			}
+			break;
+		case U2FHID_CUSTOM_GEN_ATT_KEY:
+			if (atecc_send_recv(ATECC_CMD_GENKEY, ATECC_GENKEY_PRIVATE, U2F_ATTESTATION_KEY_SLOT,
+				NULL, 0, appdata.tmp, sizeof(appdata.tmp), &res) == 0 && res.len <= 64)
+			{
+				u2f_hid_set_len(res.len);
+				u2f_hid_writeback(res.buf, res.len);
+				u2f_hid_flush();		
+			}
+			else
+			{
+				u2f_hid_set_len(0);
+				u2f_hid_flush();
+			}
+			break;
+		case U2FHID_CUSTOM_GET_RNG:
+			if (atecc_send_recv(ATECC_CMD_RNG, ATECC_RNG_P1, ATECC_RNG_P2,
+				NULL, 0, appdata.tmp, sizeof(appdata.tmp), &res) == 0 && res.len <= 64)
+			{
+				u2f_hid_set_len(res.len);
+				u2f_hid_writeback(res.buf, res.len);
+				u2f_hid_flush();		
+			}
+			else
+			{
+				u2f_hid_set_len(0);
+				u2f_hid_flush();
+			}
+			break;
+		case U2FHID_CUSTOM_SET_RNG_SEED:
+			appdata.tmp[0] = 
+				atecc_send_recv(ATECC_CMD_NONCE, ATECC_NONCE_RNG_UPDATE, 0,
+								req->pkt.init.payload, 20,
+								appdata.tmp,
+								sizeof(appdata.tmp), &res);
+			u2f_hid_set_len(1);
+			u2f_hid_writeback(appdata.tmp, 1);
+			u2f_hid_flush();
+			break;
+		case U2FHID_CUSTOM_WIPE_KEYS:
+			appdata.tmp[1] = u2f_wipe_keys();
+			u2f_hid_set_len(1);
+			u2f_hid_writeback(appdata.tmp, 1);
+			u2f_hid_flush();		
+			break;
+		case U2FHID_CUSTOM_INC_COUNTER:
+			if (atecc_send_recv(ATECC_CMD_COUNTER,
+								ATECC_COUNTER_INC, ATECC_COUNTER0, NULL, 0,
+								appdata.tmp, sizeof(appdata.tmp), &res) == 0)
+			{
+				u2f_hid_set_len(res.len);
+				u2f_hid_writeback(res.buf, res.len);
+				u2f_hid_flush();
+			}
+			else
+			{
+				u2f_hid_set_len(0);
+				u2f_hid_flush();
+			}
+			break;		
+		case U2FHID_CUSTOM_ENTER_BOOTLOADER:
+			USB_Detach();
+			enterBootloader();
 			break;
 		default:
 			set_app_error(ERROR_HID_INVALID_CMD);

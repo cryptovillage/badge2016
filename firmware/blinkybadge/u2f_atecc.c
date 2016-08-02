@@ -36,10 +36,11 @@
 #include "blinkybadge.h"
 #include "u2f.h"
 #include "u2f_hid.h"
-//#include "eeprom.h"
+#include "eeprom.h"
 #include "atecc508a.h"
 
 #include <util/delay.h>
+#include <avr/sleep.h>
 
 struct key_handle
 {
@@ -55,7 +56,7 @@ struct key_storage_header
 } key_store;
 
 #define U2F_NUM_KEYS 				U2F_ATTESTATION_KEY_SLOT
-#define U2F_KEYS_ADDR				(0xF800)
+#define U2F_KEYS_ADDR				0
 #define U2F_KEY_ADDR(k)				(U2F_KEYS_ADDR + ((k)*U2F_KEY_HANDLE_SIZE))
 
 
@@ -83,8 +84,7 @@ static uint8_t key_same(struct key_handle * k1, struct key_handle * k2)
 
 static void flush_key_store()
 {
-	//eeprom_erase(U2F_EEPROM_CONFIG);
-	//eeprom_write(U2F_EEPROM_CONFIG, (uint8_t* )&key_store, sizeof(struct key_storage_header));
+	eeprom_write(U2F_EEPROM_CONFIG, (uint8_t* )&key_store, sizeof(struct key_storage_header));
 }
 
 int8_t u2f_wipe_keys()
@@ -101,7 +101,7 @@ int8_t u2f_wipe_keys()
 
 	// wipe
 	serious = 0;
-	//eeprom_erase(U2F_EEPROM_CONFIG);
+	eeprom_erase();
 	u2f_init();
 	return 0;
 
@@ -115,51 +115,57 @@ void u2f_init()
 	int8_t i,ec;
 	uint8_t * clear = 0;
 	struct atecc_response res;
+	
+	if (is_locked(appdata.tmp)) {	
+		eeprom_read(U2F_EEPROM_CONFIG, (uint8_t* )&key_store, sizeof(struct key_storage_header));
 
-	//eeprom_read(U2F_EEPROM_CONFIG, (uint8_t* )&key_store, sizeof(struct key_storage_header));
-
-	// initialize key handles
-	if (key_store.num_keys != U2F_NUM_KEYS)
-	{
-		//watchdog();
-
-
-		for (i=0; i < U2F_NUM_KEYS; i++)
+		// initialize key handles
+		if (key_store.num_keys != U2F_NUM_KEYS)
 		{
 			//watchdog();
-			ec = atecc_send_recv(ATECC_CMD_RNG,ATECC_RNG_P1,ATECC_RNG_P2,
-							NULL, 0,
-							appdata.tmp,
-							sizeof(appdata.tmp), &res);
-			if (ec != 0)
+	
+			for (i=0; i < U2F_NUM_KEYS; i++)
 			{
-				//u2f_printb("atecc_send_recv failed ",2,i,-ec);
-
-				// erase eeprom
-				//eeprom_erase(U2F_EEPROM_CONFIG);
-
-				// erase ram
-				for (i=0; i<0x400;i++)
+				//watchdog();
+				ec = atecc_send_recv(ATECC_CMD_RNG,ATECC_RNG_P1,ATECC_RNG_P2,
+								NULL, 0,
+								appdata.tmp,
+								sizeof(appdata.tmp), &res);
+				if (ec != 0)
 				{
-					*(clear++) = 0x0;
+					//u2f_printb("atecc_send_recv failed ",2,i,-ec);
+	
+					// erase eeprom
+					//eeprom_erase(U2F_EEPROM_CONFIG);
+	
+					// erase ram
+					//for (i=0; i<0x400;i++)
+					//{
+					//	*(clear++) = 0x0;
+					//}
+					// reset
+					//reboot();
+					return;
 				}
-				// reset
-				//reboot();
+				res.buf[0] = i+1;
+
+				eeprom_write(U2F_KEYS_ADDR + i * U2F_KEY_HANDLE_SIZE,
+							 res.buf, U2F_KEY_HANDLE_SIZE);
 			}
-			res.buf[0] = i+1;
 
-
-			//eeprom_write(U2F_KEYS_ADDR + i * U2F_KEY_HANDLE_SIZE,
-			//				res.buf, U2F_KEY_HANDLE_SIZE);
+			key_store.num_keys = U2F_NUM_KEYS;
+			key_store.valid_keys = 0;
+			key_store.num_issued = 0;
+			flush_key_store();
 		}
-
-		key_store.num_keys = U2F_NUM_KEYS;
-		key_store.valid_keys = 0;
-		key_store.num_issued = 0;
-		flush_key_store();
-
 	}
+}
 
+void u2f_response_writeback_progmem(uint8_t PROGMEM * buf, uint16_t len)
+{
+	while (len--) {
+		u2f_hid_writeback(pgm_read_byte(buf++), 1);
+	}
 }
 
 void u2f_response_writeback(uint8_t * buf, uint16_t len)
@@ -183,7 +189,10 @@ int8_t u2f_get_user_feedback()
 	uint32_t t;
 	_delay_ms(1);
 	t = get_ms();
-	while(U2F_BUTTON_IS_PRESSED()){}
+	while(U2F_BUTTON_IS_PRESSED()){
+		idleTasks();
+		sleep_cpu();
+	}
 	while(!U2F_BUTTON_IS_PRESSED())
 	{
 		// turn red
@@ -198,6 +207,9 @@ int8_t u2f_get_user_feedback()
 		if (get_ms() - t > 10000)
 			break;
 		//watchdog();
+		
+		idleTasks();
+		sleep_cpu();
 	}
 
 	if (U2F_BUTTON_IS_PRESSED())
@@ -277,7 +289,7 @@ int8_t u2f_ecdsa_sign(uint8_t * dest, uint8_t * handle)
 
 	if (keyslot != U2F_ATTESTATION_KEY_SLOT)
 	{
-		//eeprom_read(U2F_KEY_ADDR(keyslot), (uint8_t* )&k, U2F_KEY_HANDLE_SIZE);
+		eeprom_read(U2F_KEY_ADDR(keyslot), (uint8_t* )&k, U2F_KEY_HANDLE_SIZE);
 
 		if (key_same((struct key_handle *)handle, &k) != 0)
 		{
@@ -308,7 +320,7 @@ int8_t u2f_new_keypair(uint8_t * handle, uint8_t * pubkey)
 
 	memmove(pubkey, res.buf, 64);
 
-	//eeprom_read(U2F_KEY_ADDR(keyslot), (uint8_t* )&k, U2F_KEY_HANDLE_SIZE);
+	eeprom_read(U2F_KEY_ADDR(keyslot), (uint8_t* )&k, U2F_KEY_HANDLE_SIZE);
 	if (k.index-1 != keyslot)
 	{
 
@@ -330,7 +342,7 @@ int8_t u2f_load_key(uint8_t * handle)
 	{
 		return -1;
 	}
-	//eeprom_read(U2F_KEY_ADDR(keyslot), (uint8_t* )&k, U2F_KEY_HANDLE_SIZE);
+	eeprom_read(U2F_KEY_ADDR(keyslot), (uint8_t* )&k, U2F_KEY_HANDLE_SIZE);
 
 	if (key_same((struct key_handle *)handle, &k) != 0)
 	{
@@ -348,10 +360,10 @@ uint32_t u2f_count()
 	return *(uint32_t*)res.buf;
 }
 
-uint16_t __attest_size = 0;
-uint8_t __attest[];
+uint16_t __attest_size = 2;
+const uint8_t PROGMEM __attest[] = { 0x00, 0x00 };
 
-uint8_t * u2f_get_attestation_cert()
+uint8_t PROGMEM * u2f_get_attestation_cert()
 {
 	return __attest;
 }

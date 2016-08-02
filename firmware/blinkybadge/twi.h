@@ -23,6 +23,7 @@
 #ifndef TWI_H_
 #define TWI_H_
 
+void twiWake();
 uint8_t twiSendPkt(uint8_t addr, uint8_t *pkt, int len);
 uint8_t twiRecvPkt(uint8_t addr, uint8_t *pkt, int len);
 uint8_t twiSendExtPkt(uint8_t addr, uint8_t *p1, int lp1, uint8_t *p2, int lp2);

@@ -73,6 +73,13 @@ USB_ClassInfo_HID_Device_t FIDO_HID_Interface =
 
 extern uint8_t currentAnimation;
 
+void idleTasks()
+{
+	HID_Device_USBTask(&FIDO_HID_Interface);
+	USB_USBTask();
+	touch_measure();
+}
+
 int main(void)
 {
 	uint8_t led[24];
@@ -82,14 +89,13 @@ int main(void)
 		led[i] = 0xff;
 		
 	SetupHardware();
-	GlobalInterruptEnable();
 	initAnimation();
+	GlobalInterruptEnable();
+	u2f_init();
 	
 	for (;;)
 	{
-		HID_Device_USBTask(&FIDO_HID_Interface);
-		USB_USBTask();
-		touch_measure();
+		idleTasks();
 		if (!lastButtonState && (qt_measure_data.qt_touch_status.sensor_states[0] & 1)) {
 			currentAnimation ^= 1;
 			beginAnimation();
@@ -148,21 +154,24 @@ void SetupHardware(void)
 	/* Hardware Initialization */
 	/* disable pull-ups */
 	//MCUCR |= (1u << PUD);	
+	DDRB = _BV(PORTD0);
 	initTimerISR();
 	USB_Init();
 	touch_init();
-	DDRD = _BV(PORTD0);
+	twiInit();
+	atecc_sleep();
 }
 
 /** Event handler for the library USB Connection event. */
 void EVENT_USB_Device_Connect(void)
 {
-	//usb_write("TEST", 4);
+	u2f_hid_init();
 }
 
 /** Event handler for the library USB Disconnection event. */
 void EVENT_USB_Device_Disconnect(void)
 {
+	atecc_sleep();
 }
 
 /** Event handler for the library USB Configuration Changed event. */
@@ -231,6 +240,10 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 
 void usb_write(uint8_t *buf, int len)
 {
+	while (reportSize) {
+		idleTasks();
+		sleep_cpu();
+	}
 	memcpy(reportData, buf, len);
 	reportSize = len;
 }

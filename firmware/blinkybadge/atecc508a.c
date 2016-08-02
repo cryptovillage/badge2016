@@ -46,10 +46,10 @@ int8_t atecc_send(uint8_t cmd, uint8_t p1, uint16_t p2,
 	params[1] = 7+len;
 	params[2] = cmd;
 	params[3] = p1;
-	params[4] = ((uint8_t*)&p2)[1];
-	params[5] = ((uint8_t* )&p2)[0];
+	params[4] = p2 & 0xff;
+	params[5] = p2 >> 8;
 
-	if (!twiSendExtPkt(ATECC508A_ADDR, params, sizeof(params), buf, len)) {
+	if (twiSendExtPkt(ATECC508A_ADDR, params, sizeof(params), buf, len)) {
 		return -1;
 	}
 	
@@ -68,10 +68,9 @@ void atecc_sleep()
 
 void atecc_wake()
 {
+	twiRecvPkt(0x7F, NULL, 0); // Resync I2C
 	twiSendPkt(ATECC508A_ADDR, "\0\0", 2);
 }
-
-#define PKT_CRC(buf, pkt_len) (htole16(*((uint16_t*)(buf+pkt_len-2))))
 
 int8_t atecc_recv(uint8_t * buf, uint8_t buflen, struct atecc_response* res)
 {
@@ -84,6 +83,7 @@ int8_t atecc_recv(uint8_t * buf, uint8_t buflen, struct atecc_response* res)
 
 	if (pkt_len <= buflen && pkt_len >= 4)
 	{
+		
 		/* FIXME
 		if (PKT_CRC(buf,pkt_len) != SMB_crc)
 		{
@@ -135,9 +135,10 @@ int8_t atecc_send_recv(uint8_t cmd, uint8_t p1, uint16_t p2,
 							uint8_t rxlen, struct atecc_response* res)
 {
 	uint8_t errors = 0;
-	atecc_wake();
 	resend:
-	while(atecc_send(cmd, p1, p2, tx, txlen) == -1)
+	atecc_wake();
+	set_app_error(0);
+	while(atecc_send(cmd, p1, p2, tx, txlen))
 	{
 		u2f_delay(10);
 		errors++;
@@ -191,17 +192,13 @@ int8_t atecc_write_eeprom(uint8_t base, uint8_t offset, uint8_t* srcbuf, uint8_t
 			ATECC_RW_CONFIG, base, dstbuf, 4,
 			buf, sizeof(buf), &res);
 
-	if (res.buf[0])
-	{
-		set_app_error(-res.buf[0]);
+	if (get_app_error()) {
 		return -1;
 	}
 	return 0;
 }
 
-#ifdef ATECC_SETUP_DEVICE
-
-static int is_locked(uint8_t * buf)
+int is_locked(uint8_t * buf)
 {
 	struct atecc_response res;
 	atecc_send_recv(ATECC_CMD_READ,
@@ -213,7 +210,6 @@ static int is_locked(uint8_t * buf)
 	else
 		return 0;
 }
-
 
 static void dump_config(uint8_t* buf)
 {
@@ -236,7 +232,7 @@ static void dump_config(uint8_t* buf)
 	//u2f_printx("config crc:", 1,reverse_bits(crc));
 }
 
-static void atecc_setup_config(uint8_t* buf)
+int8_t atecc_setup_config()
 {
 	struct atecc_response res;
 	uint8_t i;
@@ -255,10 +251,10 @@ static void atecc_setup_config(uint8_t* buf)
 		if ( atecc_write_eeprom(ATECC_EEPROM_SLOT(i), ATECC_EEPROM_SLOT_OFFSET(i), &sc, ATECC_EEPROM_SLOT_SIZE) != 0)
 		{
 			//u2f_printb("1 atecc_write_eeprom failed ",1, i);
+			return -1;
 		}
 
 	}
-
 
 	kc.private = 1;
 	kc.pubinfo = 1;
@@ -268,117 +264,20 @@ static void atecc_setup_config(uint8_t* buf)
 	// set up config for keys
 	for (i = 0; i < 16; i++)
 	{
+		/*
 		if (i==15)
 		{
 			kc.lockable = 1;
 		}
+		*/
 		if ( atecc_write_eeprom(ATECC_EEPROM_KEY(i), ATECC_EEPROM_KEY_OFFSET(i), &kc, ATECC_EEPROM_KEY_SIZE) != 0)
 		{
 			//u2f_printb("3 atecc_write_eeprom failed " ,1,i);
+			return -2;
 		}
 
 	}
 
-	dump_config(buf);
+	//dump_config(buf);
+	return 0;
 }
-
-// write a message to the otp memory before locking
-static void atecc_write_otp(uint8_t * buf)
-{
-	char msg[] = "conorpp's u2f token.\r\n\0\0\0\0";
-	int i;
-	for (i=0; i<sizeof(msg); i+=4)
-	{
-		atecc_send_recv(ATECC_CMD_WRITE,
-				ATECC_RW_OTP, ATECC_EEPROM_B2A(i), msg+i, 4,
-				buf, sizeof(buf), NULL);
-	}
-}
-
-void atecc_setup_init(uint8_t * buf)
-{
-	// 13s watchdog
-	//WDTCN = 7;
-	if (!is_locked(buf))
-	{
-		//u2f_prints("setting up config...\r\n");
-		atecc_setup_config(buf);
-	}
-	else
-	{
-		//u2f_prints("already locked\r\n");
-	}
-}
-
-// buf should be at least 40 bytes
-void atecc_setup_device(struct config_msg * msg)
-{
-	struct atecc_response res;
-	struct config_msg usbres;
-
-	static uint16_t crc = 0;
-	uint8_t buf[40];
-
-	memset(&usbres, 0, sizeof(struct config_msg));
-	usbres.cmd = msg->cmd;
-
-	switch(msg->cmd)
-	{
-		case U2F_CONFIG_GET_SERIAL_NUM:
-
-			//u2f_prints("U2F_CONFIG_GET_SERIAL_NUM\r\n");
-			atecc_send_recv(ATECC_CMD_READ,
-					ATECC_RW_CONFIG | ATECC_RW_EXT, 0, NULL, 0,
-					buf, 40, &res);
-			memmove(usbres.buf+1, res.buf, 15);
-			usbres.buf[0] = 15;
-			break;
-
-		case U2F_CONFIG_IS_BUILD:
-			//u2f_prints("U2F_CONFIG_IS_BUILD\r\n");
-			usbres.buf[0] = 1;
-			break;
-		case U2F_CONFIG_IS_CONFIGURED:
-			//u2f_prints("U2F_CONFIG_IS_CONFIGURED\r\n");
-			usbres.buf[0] = 1;
-			break;
-		case U2F_CONFIG_LOCK:
-			crc = *(uint16_t*)msg->buf;
-			usbres.buf[0] = 1;
-			//u2f_printx("got crc: ",1,crc);
-
-			if (!is_locked(buf))
-			{
-				if (atecc_send_recv(ATECC_CMD_LOCK,
-						ATECC_LOCK_CONFIG, crc, NULL, 0,
-						buf, sizeof(buf), NULL))
-				{
-					//u2f_prints("ATECC_CMD_LOCK failed\r\n");
-					return;
-				}
-			}
-			else
-			{
-				//u2f_prints("already locked\r\n");
-			}
-			break;
-		case U2F_CONFIG_GENKEY:
-			//u2f_prints("U2F_CONFIG_GENKEY\r\n");
-
-			atecc_send_recv(ATECC_CMD_GENKEY,
-					ATECC_GENKEY_PRIVATE, U2F_ATTESTATION_KEY_SLOT, NULL, 0,
-					appdata.tmp, sizeof(appdata.tmp), &res);
-
-			//u2f_printb("key is bytes ",1,res.len);
-
-			memmove((uint8_t*)&usbres, res.buf, 64);
-
-			break;
-		default:
-			//u2f_printb("invalid command: ",1,msg->cmd);
-	}
-
-	usb_write((uint8_t*)&usbres, FIDO_U2F_EPSIZE);
-
-}
-#endif
