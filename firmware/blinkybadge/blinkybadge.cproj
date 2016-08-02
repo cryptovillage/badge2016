@@ -309,7 +309,7 @@
       <Value>../src/QTouch</Value>
     </ListValues>
   </avrgcc.linker.libraries.LibrarySearchPaths>
-  <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--relax</avrgcc.linker.miscellaneous.LinkerFlags>
+  <avrgcc.linker.miscellaneous.LinkerFlags>-Wl,--relax,-section-start=.attcert=0x5c00,-section-start=.animations=0x6000</avrgcc.linker.miscellaneous.LinkerFlags>
   <avrgcc.assembler.general.AssemblerFlags>-DARCH=ARCH_AVR8 -DBOARD=BOARD_NONE -DF_CPU=16000000UL -DF_USB=16000000UL -DUSE_LUFA_CONFIG_HEADER</avrgcc.assembler.general.AssemblerFlags>
   <avrgcc.assembler.general.IncludePaths>
     <ListValues>

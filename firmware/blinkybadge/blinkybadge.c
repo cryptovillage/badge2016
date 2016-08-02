@@ -154,7 +154,7 @@ void SetupHardware(void)
 	/* Hardware Initialization */
 	/* disable pull-ups */
 	//MCUCR |= (1u << PUD);	
-	DDRB = _BV(PORTD0);
+	ws2812_init();
 	initTimerISR();
 	USB_Init();
 	touch_init();

@@ -25,6 +25,7 @@
 #define WS2812_H_
 
 
+void ws2812_init();
 void updateLEDs(uint8_t * buf, uint8_t count);
 
 

@@ -361,7 +361,7 @@ uint32_t u2f_count()
 }
 
 uint16_t __attest_size = 2;
-const uint8_t PROGMEM __attest[] = { 0x00, 0x00 };
+const uint8_t __attribute__ ((section (".attcert"))) __attest[1024] = { 'T', 'E', 'S', 'T' };
 
 uint8_t PROGMEM * u2f_get_attestation_cert()
 {

@@ -27,6 +27,11 @@
 #define WS2812_PORT		PORTD
 #define WS2812_PIN		PORTD0
 
+void ws2812_init()
+{
+	DDRD = _BV(PORTD0);
+}
+
 // FIXME: The timing here is severely broken but seems to work
 
 void updateLEDs(uint8_t * buf, uint8_t count)

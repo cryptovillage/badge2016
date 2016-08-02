@@ -15,7 +15,7 @@ uint8_t currentAnimation;
 static uint16_t currentFrame;
 static uint16_t endFrame;
 
-static const uint8_t PROGMEM animationData[] = {
+static const uint8_t __attribute__ ((section (".animations"))) animationData[8192] = {
 	0x0c, 0x00, 0x08, 0x00,
 	0xdc, 0x00, 0x10, 0x00,
 	0x00, 0x00, 0x00, 0x00,
