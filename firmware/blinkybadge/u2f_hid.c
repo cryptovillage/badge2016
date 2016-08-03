@@ -84,7 +84,7 @@ static struct hid_layer_param
 uint32_t _hid_lockt = 0;
 uint32_t _hid_lock_cid = 0;
 
-struct CID CIDS[5];
+struct CID CIDS[2];
 static uint8_t CID_NUM = 0;
 
 static uint8_t _hid_pkt[FIDO_U2F_EPSIZE];
@@ -136,7 +136,9 @@ void u2f_hid_flush()
 // handling U2F HID sequencing
 void u2f_hid_writeback(uint8_t * payload, uint16_t len)
 {
-	struct u2f_hid_msg * r = (struct u2f_hid_msg *) _hid_pkt;
+	struct u2f_hid_msg * r;
+	again:
+	r = (struct u2f_hid_msg *) _hid_pkt;
 	_hid_in_session = 1;
 	if (_hid_offset == 0)
 	{
@@ -145,7 +147,7 @@ void u2f_hid_writeback(uint8_t * payload, uint16_t len)
 		{
 			r->pkt.init.cmd = hid_layer.current_cmd;
 			U2FHID_SET_LEN(r, hid_layer.res_len);
-			_hid_offset = 7;
+			_hid_offset =  7;
 		}
 		else
 		{
@@ -172,8 +174,7 @@ void u2f_hid_writeback(uint8_t * payload, uint16_t len)
 
 			if (len)
 			{
-				u2f_hid_writeback(payload, len);
-				return;
+				goto again;
 			}
 			else break;
 		}
@@ -495,7 +496,6 @@ static void hid_u2f_parse(struct u2f_hid_msg* req)
 			}
 			break;		
 		case U2FHID_CUSTOM_ENTER_BOOTLOADER:
-			USB_Detach();
 			enterBootloader();
 			break;
 		default:

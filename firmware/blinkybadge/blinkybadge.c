@@ -75,10 +75,11 @@ extern uint8_t currentAnimation;
 
 void idleTasks()
 {
-	HID_Device_USBTask(&FIDO_HID_Interface);
-	USB_USBTask();
 	touch_measure();
 }
+
+static uint8_t reportData[64];
+uint8_t reportSize = 0;
 
 int main(void)
 {
@@ -95,6 +96,8 @@ int main(void)
 	
 	for (;;)
 	{
+		HID_Device_USBTask(&FIDO_HID_Interface);
+		USB_USBTask();
 		idleTasks();
 		if (!lastButtonState && (qt_measure_data.qt_touch_status.sensor_states[0] & 1)) {
 			currentAnimation ^= 1;
@@ -152,8 +155,10 @@ void SetupHardware(void)
 	clock_prescale_set(clock_div_1);
 
 	/* Hardware Initialization */
-	/* disable pull-ups */
-	//MCUCR |= (1u << PUD);	
+	// Apply pull-ups to all pins to minimize power usage
+	PORTB = 0xff;
+	PORTC = 0xff;
+	PORTD = 0xff;
 	ws2812_init();
 	initTimerISR();
 	USB_Init();
@@ -206,8 +211,6 @@ void EVENT_USB_Device_StartOfFrame(void)
  *
  *  \return Boolean \c true to force the sending of the report, \c false to let the library determine if it needs to be sent
  */
-static uint8_t reportData[64];
-uint8_t reportSize = 0;
 
 bool CALLBACK_HID_Device_CreateHIDReport(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo,
                                          uint8_t* const ReportID,
@@ -241,6 +244,8 @@ void CALLBACK_HID_Device_ProcessHIDReport(USB_ClassInfo_HID_Device_t* const HIDI
 void usb_write(uint8_t *buf, int len)
 {
 	while (reportSize) {
+		HID_Device_USBTask(&FIDO_HID_Interface);
+		USB_USBTask();
 		idleTasks();
 		sleep_cpu();
 	}
