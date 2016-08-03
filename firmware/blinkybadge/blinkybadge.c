@@ -87,12 +87,18 @@ int main(void)
 	uint8_t lastButtonState = 0;
 	
 	for (int i = 0; i < 24; i++)
-		led[i] = 0xff;
+		led[i] = 0x00;
 		
 	SetupHardware();
 	initAnimation();
 	GlobalInterruptEnable();
 	u2f_init();
+	
+	// LED timing test
+	for (;;) {
+		updateLEDs(led, 24);
+		_delay_us(50);
+	}
 	
 	for (;;)
 	{

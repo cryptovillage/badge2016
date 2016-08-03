@@ -42,13 +42,26 @@ void updateLEDs(uint8_t * buf, uint8_t count)
 			for (int i = 0; i < 8; i++) {
 				WS2812_PORT |= _BV(WS2812_PIN);
 				if (b & 0x80) {
-					_delay_us(0.8);
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
 					WS2812_PORT &= ~_BV(WS2812_PIN);
-					_delay_us(0.45);
 				} else {
-					//_delay_us(0.2);
+					asm("nop");
 					WS2812_PORT &= ~_BV(WS2812_PIN);
-					_delay_us(0.85);
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
+					asm("nop");
 				}
 				b <<= 1;
 			}
