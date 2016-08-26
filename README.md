@@ -1,5 +1,8 @@
 # cpvdcbadge
 
+## Building Firmware
+TODO.
+
 ## Flashing Instructions
 
     lsusb
