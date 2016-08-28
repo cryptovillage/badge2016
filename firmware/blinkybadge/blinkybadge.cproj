@@ -279,6 +279,7 @@
       <Value>F_CPU=16000000UL</Value>
       <Value>USE_LUFA_CONFIG_HEADER</Value>
       <Value>F_USB=16000000UL</Value>
+      <Value>WS2812PORT=D</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
   <avrgcc.compiler.directories.IncludePaths>

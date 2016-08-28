@@ -24,12 +24,13 @@
 #include <util/atomic.h>
 #include <util/delay.h>
 
-#define WS2812_PORT		PORTD
-#define WS2812_PIN		PORTD0
+#define WS2812_PORT		PORTB
+#define WS2812_PIN		PORTB0
+#define WS2812_DDR		DDRB
 
 void ws2812_init()
 {
-	DDRD = _BV(PORTD0);
+	WS2812_DDR = _BV(WS2812_PIN);
 }
 
 // FIXME: The timing here is severely broken but seems to work

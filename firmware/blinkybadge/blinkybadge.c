@@ -34,6 +34,7 @@
 #include "ws2812.h"
 #include "touch.h"
 #include "u2f_hid.h"
+#include "atecc508a.h"
 
 uint16_t qt_measurement_period_msec = QT_MEASUREMENT_PERIOD_MS;
 uint16_t time_ms_inc=0;
@@ -85,19 +86,20 @@ int main(void)
 {
 	uint8_t led[24];
 	uint8_t lastButtonState = 0;
-	
-	for (int i = 0; i < 24; i++)
-		led[i] = 0x00;
+	struct atecc_response res;
+	uint8_t ec;
 		
 	SetupHardware();
 	initAnimation();
 	GlobalInterruptEnable();
 	u2f_init();
 	
-	// LED timing test
-	for (;;) {
-		updateLEDs(led, 24);
-		_delay_us(50);
+	ec = atecc_send_recv(ATECC_CMD_READ, ATECC_RW_CONFIG | ATECC_RW_EXT,
+			0, NULL, 0,
+			led, 24, &res);
+	if (!ec && res.len >= 4 && res.buf[1] == 0x23) {
+		currentAnimation = 0;
+		beginAnimation();
 	}
 	
 	for (;;)
@@ -170,6 +172,8 @@ void SetupHardware(void)
 	USB_Init();
 	touch_init();
 	twiInit();
+	currentAnimation = 1;
+	beginAnimation();	
 	atecc_sleep();
 }
 

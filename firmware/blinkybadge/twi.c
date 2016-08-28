@@ -214,9 +214,12 @@ uint8_t twiRecvVariableLenPkt(uint8_t addr, uint8_t *pkt, int maxLen)
 	if (len < maxLen) {
 		maxLen = len;
 	}
+	if (len > maxLen) {
+		len = maxLen;
+	}
 	while (--maxLen) {
 		*pkt++ = twiRecvByte(!maxLen);
 	}
 	twiStop();
-	return len - maxLen;
+	return len;
 }
