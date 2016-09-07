@@ -5,7 +5,10 @@ TODO.
 
 ## Flashing Instructions
 
+There's no need for an extra flashing device, it has a bootloader so it can be programmed directly via usb. The only thing needed is the "dfu-programmer" software, more info: https://dfu-programmer.github.io/.
+
     lsusb
+    
 Find the Atmega device in the list. If it's already been flashed, it will show up as "dc24:1337". To get it into a mode to reflash it, follow the directions in the "Reflashing" section.
 
     sudo chown 666 /dev/bus/usb/02/020
